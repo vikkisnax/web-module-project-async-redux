@@ -13,12 +13,13 @@ import thunk from 'redux-thunk';
 import reducer from './reducers';
 
 //3
-const store = createStore(reducer, applyMiddleware(thunk));
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, /* preloadedState, */ composeEnhancers(applyMiddleware(thunk ) ));
 
-//4
+//4a
 const rootElement = document.getElementById('root')
 
-//5
+//4b
 ReactDOM.render(
   <Provider store={store}>
     <App />
