@@ -7,39 +7,29 @@ import { searchJoke } from '../actions/index';
 
 const Jokes = (props) => {
     console.log('props:', props.setup)
-    // const { joke, setup, punchline, error, isFetching } = props;
-    const [joke, setJoke] = useState('');
-    
-    const handleChanges = e => {
-        setJoke(e.target.value);
-    }
 
     const handleSubmit = e => {
         e.preventDefault();
-        props.searchJoke('cat');
-        console.log("jokes:", joke);
+        props.searchJoke();
+    }
+
+    if (props.error) {
+        return <h2>There's an error: {error}</h2>
+    }
+    if (props.isFetching) {
+        return <h2>Fetching joke</h2>
     }
 
         return (
-            <div className='joke-search-container'>
-                <h3>Jokes Comp</h3>
-                <div className='joke-input'>
-                    <h4>Search Type of Joke:</h4>
-                {/* look at 1:08 help */}
-                    <input
-                    onChange={handleChanges}
-                    type="text"
-                    id="jokeInput"
-                    name="jokeInput"
-                    />
-                </div>
-                <button 
-                    onClick={handleSubmit}>Search
-                </button>
             <div className='joke-container'>
-                <p>hi</p>
+                {/* <h3>Jokes Comp</h3> */}
+                <p/>
+                <button onClick={handleSubmit}>
+                    Random Joke
+                </button>
+                {/* <p>joke should here</p> */}
                 <p>{props.setup}</p>
-            </div>
+                <p>{props.punchline}</p>
             </div>
         );
     }
@@ -47,9 +37,11 @@ const Jokes = (props) => {
 //connect store to this comp. what props do you need from initial state?
 const mapStateToProps = state => {
     return {
-        joke: state.joke,
+        // joke: state.joke,
         setup: state.setup,
-        punchline: state.punchline
+        punchline: state.punchline,
+        error: state.error,
+        isFetching: state.isFetching
     }
 }
 

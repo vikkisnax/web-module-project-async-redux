@@ -1,34 +1,56 @@
 import axios from 'axios';
 
-export const SEARCH_JOKE = 'SEARCH_JOKE'; //action type
+//action type
+export const PUNCHLINE = 'PUNCHLINE'; 
+export const SET_IS_FETCHING = 'SET_IS_FETCHING';
 export const SEARCH_SUCCESS = 'SEARCH_SUCCESS';
 export const SEARCH_FAIL = 'SEARCH_FAIL';
 
-export const searchJoke = (joke) => dispatch => { // action
-    console.log("actions:", joke);
-
-    dispatch({ 
-        type: SEARCH_JOKE, 
-        //need the payload to update joke property in initial state
-        payload: joke
-    });
+export const searchJoke = () => dispatch => { // action
+    // console.log("actions:", setup);
+    dispatch(setIsFetching(true)); //updating isFetching in initial state
     axios
-        .get(`https://official-joke-api.appspot.com/random_joke`)
+        .get('https://official-joke-api.appspot.com/random_joke')
         .then(res => {
             console.log(res);
-            dispatch(searchSuccess(res.data.results))}
-        )
-        .catch(err => 
-            dispatch(searchFail)
+            const joke = res.data.setup;
+            const answer = res.data.punchline;
+            dispatch(searchSuccess(joke));
+            setTimeout(() => {
+                dispatch(punchline(answer));}, 5000);
+        })
+        .catch(err => {
+            const msg = err.message;
+            // or is it \/ ??
+            // const msg = error.message;
+            dispatch(searchFail(msg))}
         );
 };
 
-export const searchSuccess = (success) => {
-    return({type: SEARCH_SUCCESS, payload: success});
+const setIsFetching = (isfetching) => {
+    return{
+        type: SET_IS_FETCHING, payload: isfetching
+    }
 }
 
-export const searchFail = () => {
-    return({type: SEARCH_FAIL, 
-        // payload: err.response.status
+const searchSuccess = (joke) => {
+    return({
+        type: SEARCH_SUCCESS, 
+        payload: joke
+    });
+}
+
+const punchline = (answer) => {
+    return({
+        type: PUNCHLINE,
+        payload: answer
+    })
+}
+
+const searchFail = (error) => {
+    return({
+        type: SEARCH_FAIL, 
+        payload: error
+        // i passed the error msg in the .catch to searchFail's payload
     });
 }
