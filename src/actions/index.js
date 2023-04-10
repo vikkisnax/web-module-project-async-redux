@@ -13,6 +13,8 @@ export const searchJoke = () => dispatch => { // action
         .get('https://official-joke-api.appspot.com/random_joke')
         .then(res => {
             console.log(res);
+            dispatch(searchSuccess(''));
+            dispatch(punchline(''));
             const joke = res.data.setup;
             const answer = res.data.punchline;
             dispatch(searchSuccess(joke));
